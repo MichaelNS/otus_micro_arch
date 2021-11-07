@@ -10,7 +10,7 @@ spec:
     - host: arch.homework
       http:
         paths:
-        - path: /myapp($|/)(.*)
+        - path: /otusapp/michael($|/)(.*)
           pathType: Prefix
           backend:
             service:
