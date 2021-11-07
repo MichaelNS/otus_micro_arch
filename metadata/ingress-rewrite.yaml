@@ -1,7 +1,8 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: hello-ingress
+  name: rewrite
+  namespace: otus
   annotations:
     kubernetes.io/ingress.class: nginx
     nginx.ingress.kubernetes.io/rewrite-target: /$2
@@ -10,16 +11,8 @@ spec:
     - host: arch.homework
       http:
         paths:
-        - path: /otusapp/michael($|/)(.*)
-#        - path: /otusapp(/|$)(/*|$)(.*)
+        - path: /otusapp/michael(/|$)(.*)
           pathType: Prefix
-          backend:
-            service:
-              name: hello-service
-              port:
-                number: 9000
-        - path: /?(.*)
-          pathType: Exact
           backend:
             service:
               name: hello-service
