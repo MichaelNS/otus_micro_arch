@@ -11,7 +11,15 @@ spec:
       http:
         paths:
         - path: /otusapp/michael($|/)(.*)
+#        - path: /otusapp(/|$)(/*|$)(.*)
           pathType: Prefix
+          backend:
+            service:
+              name: hello-service
+              port:
+                number: 9000
+        - path: /?(.*)
+          pathType: Exact
           backend:
             service:
               name: hello-service
