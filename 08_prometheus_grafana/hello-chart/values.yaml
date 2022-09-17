@@ -1,8 +1,8 @@
 replicaCount: 2
 
 image:
-  repository: hello-py
-#  repository: michaelns/hello-py
+#  repository: hello-py
+  repository: michaelns/hello-py
   tag: 0.3.0
 
 service:

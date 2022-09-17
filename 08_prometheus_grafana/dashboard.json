@@ -139,7 +139,7 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "sum(rate(container_cpu_usage_seconds_total{pod=~\"hello-chart-deployment.*\"}[1m])*100) by (pod)",
+          "expr": "sum(rate(container_cpu_usage_seconds_total{pod=~\"myapp-hello-chart.*\"}[10m])*100) by (pod)",
           "interval": "",
           "legendFormat": "{{pod}}",
           "refId": "A"
