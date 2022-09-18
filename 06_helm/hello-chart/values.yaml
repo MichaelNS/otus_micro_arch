@@ -1,0 +1,24 @@
+replicaCount: 2
+
+image:
+  repository: michaelns/hello-py
+  tag: 0.2.0
+
+service:
+  type: NodePort
+  port: 9000
+
+postgresql:
+  enabled: true
+  postgresqlUsername: myuser
+  postgresqlPassword: passwd
+  postgresqlDatabase: myapp
+  persistence:
+    enabled: false
+  service:
+    port: "5432"
+ingress:
+  enabled: true
+  hosts:
+    - host: arch.homework
+      paths: ["/"]
