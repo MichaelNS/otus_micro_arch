@@ -1,0 +1,45 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: stresstest
+spec:
+  template:
+    metadata:
+      name: stresstest
+    spec:
+      containers:
+        - name: stresstest-get
+          image: jordi/ab
+          env:
+            - name: INGRESS_CONTROLLER_NAME
+              value: nginx-ingress-nginx-controller
+            - name: REQUEST_NUMBER
+              value: "3"
+          command:
+            - sh
+            - "-c"
+            - |
+              /bin/sh <<'EOF'
+                
+              while true; \
+                do ab -n2 -H 'Host: arch.homework' http://$INGRESS_CONTROLLER_NAME/otusapp/michael/err-test; \
+                sleep 1; \
+              done &
+              
+              while true; \
+                do ab -n5 -H 'Host: arch.homework' http://$INGRESS_CONTROLLER_NAME/otusapp/michael/config; \
+                sleep 1; \
+              done &
+              
+              while true; \
+                do ab -n4 -H 'Host: arch.homework' http://$INGRESS_CONTROLLER_NAME/otusapp/michael/db; \
+                sleep 1; \
+              done &
+              
+              while true; \
+                do ab -n3 -H 'Host: arch.homework' http://$INGRESS_CONTROLLER_NAME/otusapp/michael/health; \
+                sleep 1; \
+              done;
+              EOF
+      restartPolicy: Never
+
