@@ -1,0 +1,69 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: user-app
+  namespace: otus-msa-api-gateway
+  labels:
+    app: user-app
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: user-app
+  template:
+    metadata:
+      labels:
+        app: user-app
+    spec:
+      restartPolicy: Always
+      containers:
+        - name: user-app
+          image: user-app:v1
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: "JAVA_OPTS"
+              value: "-Dhttp.port=9000 -Dconfig.file=/svc/conf/application-cluster.conf"
+            - name: APPLICATION_SECRET
+              value: "QCY?tAnfk?aZ?iwrNwnxIlR6CTf:G3gf:90Latabg@5241AB`R5W:1uDFN];Ik@n"
+            - name: ROOT_DOMAIN
+              value: "arch.homework"
+            - name: INGRESS_DOMAIN
+              value: "auth-app.otus-msa-api-gateway.svc.cluster.local"
+            - name: DATABASE_URL
+              value: "jdbc:postgresql://auth-db-postgresql:5432/authdb"
+            - name: POSTGRES_USER
+              value: "authuser"
+            - name: POSTGRES_PASSWORD
+              value: "authpasswd"
+          ports:
+            - containerPort: 9000
+              name: http
+            # - containerPort: 9443
+            #   name: https
+          command:
+            - "/svc/bin/start"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: user-app
+  # namespace: otus-msa-api-gateway
+spec:
+  type: ClusterIP
+  selector:
+    app: user-app
+  ports:
+    - port: 80
+      name: http  # Istio требует явного указания протокола при определенных настройках
+      targetPort: http
+    # - name: http
+    #   port: 80
+    #   protocol: TCP
+    #   targetPort: http
+
+    # - name: https
+    #   port: 443
+    #   protocol: TCP

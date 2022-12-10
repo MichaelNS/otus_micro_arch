@@ -1,0 +1,50 @@
+global:
+  postgresql:
+    auth:
+      postgresPassword: "postgres"
+
+auth:
+  username: "authuser"
+  password: "authpasswd"
+  database: "authdb"
+
+primary:
+  initdb:
+    user: "authuser"
+    scripts:
+        test.sh: |
+            #!/bin/sh
+            echo "Hello world!"
+
+        init.sql: |
+              drop table if exists auth_user;
+              create table auth_user (
+                  id serial primary key,
+                  login varchar not null unique,
+                  password varchar,
+                  email varchar not null default '',
+                  first_name varchar not null default '',
+                  last_name varchar not null default ''
+              );
+              insert into auth_user (login, password) values ('admin', 'password');
+
+  persistence:
+    enabled: true
+    size: 100m
+
+  resources:
+    requests:
+      memory: 256Mi
+      cpu: 250m
+
+  # service:
+  #   type: NodePort
+  #   port: 5432
+
+networkPolicy:
+  enabled: "true"
+
+  metrics:
+    enabled: false
+    serviceMonitor:
+      enabled: false
