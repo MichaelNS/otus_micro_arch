@@ -1,0 +1,12 @@
+.idea/
+target/
+.g8/
+
+# sbt
+.bsp/
+
+# play docker build
+svc/
+
+*.log
+

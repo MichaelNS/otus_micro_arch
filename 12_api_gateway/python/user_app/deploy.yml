@@ -1,0 +1,45 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: user-app
+  namespace: otus-msa-api-gateway
+  labels:
+    app: user-app
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: user-app
+  template:
+    metadata:
+      labels:
+        app: user-app
+    spec:
+      containers:
+        - name: user-app
+          image: user-app
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 8080
+          env:
+            - name: DATABASE_URI
+              value: "postgresql://authuser:authpasswd@auth-db-postgresql:5432/authdb"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: user-app
+  namespace: otus-msa-api-gateway
+spec:
+  type: ClusterIP
+  selector:
+    app: user-app
+  ports:
+    - port: 80
+      name: http  # Istio требует явного указания протокола при определенных настройках
+      targetPort: http
