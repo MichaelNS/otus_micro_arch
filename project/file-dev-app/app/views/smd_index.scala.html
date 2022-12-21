@@ -1,0 +1,27 @@
+@(device: String, maxFilesInDir: Int)()
+
+<!doctype html>
+<html class="no-js" lang="en" dir="ltr">
+    <div class="row column">
+        <ul>
+            <li><a href="@routes.SmApplication.getByDevice(device)">get By Device</a></li>
+
+            <li><a href="@routes.SmApplication.getByDeviceByLastModifDate(device)">get Device By LastModifDate</a></li>
+
+            <li><a href="@routes.SmReport.listFilesWithoutSha256ByDevice(device)">
+                list Files Without Sha256 By Device</a></li>
+
+            <li><a href="@routes.SmReport.checkBackUp(device)">check BackUp</a></li>
+
+            <li><a href="@routes.SmReport.checkDuplicates(device)">check Duplicates</a></li>
+        </ul>
+
+        <div class="input-group-button">
+            <form action="@routes.SmApplication.deviceTree(device)" method="post">
+                <button class="button success">deviceTree</button>
+            </form>
+        </div>
+
+    </div>
+
+</html>

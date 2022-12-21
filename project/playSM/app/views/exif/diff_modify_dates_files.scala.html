@@ -1,0 +1,41 @@
+@import org.joda.time.DateTime
+@import helper._
+@(exifFc: scala.Vector[(String, String, String, DateTime, DateTime, String, String, String)], fParent: String)(implicit request: MessagesRequestHeader)
+@_template {
+    <div class="row column">
+        <h2>list files different between file modify date and exif date</h2>
+    </div>
+
+    @form(routes.SmSyncExif.setDiffModifyDateFilesByParent(fParent)) {
+        @CSRF.formField
+
+        <button class="button success">set modify date from exif to files</button>
+    }
+
+    <div class="row column">
+        <table class="stack">
+            <thead>
+                <tr>
+                    <th>Parent</th>
+                    <th>Name</th>
+                    <th>file date</th>
+                    <th>Exif date</th>
+                    <th>Make</th>
+                    <th>Model</th>
+                </tr>
+            </thead>
+            <tbody>
+            @for(fc <- exifFc) {
+                <tr>
+                    <td>@fc._1</td>
+                    <td><a href="@routes.SmView.viewFile(Some(fc._3))">@fc._2</a></td>
+                    <td>@fc._4.toLocalDateTime.toString("yyy.MM.dd HH:mm:ss")</td>
+                    <td>@fc._5.toLocalDateTime.toString("yyy.MM.dd HH:mm:ss")</td>
+                    <td>@fc._6</td>
+                    <td>@fc._7</td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+}

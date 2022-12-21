@@ -1,0 +1,34 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# https://www.playframework.com/documentation/latest/ScalaRouting
+# ~~~~
+
+GET         /health                                        controllers.HealthController.health
+
+GET         /                                              controllers.SmApplication.smIndex
+GET         /deviceIndex/:device                           controllers.SmApplication.deviceIndex(device)
++ nocsrf
+POST        /deviceTree/:device                            controllers.SmApplication.deviceTree(device)
+
+POST        /create                                        controllers.DeviceController.create
+
+POST        /createFc                                      controllers.FileCardController.create
+
+GET         /deviceImport                                  controllers.SmSyncDeviceStream.deviceImport
+
+GET         /fc/byDevice/:device                           controllers.SmApplication.getByDevice(device: String)
+GET         /fc/getByDeviceByLastModifDate/:device         controllers.SmApplication.getByDeviceByLastModifDate(device: String)
+GET         /fc/listStoreNameAndCnt                        controllers.SmApplication.listStoreNameAndCnt
+
+GET         /listFilesWithoutSha256ByDevice/:device        controllers.SmReport.listFilesWithoutSha256ByDevice(device: String)
+GET         /checkBackUp/:device                           controllers.SmReport.checkBackUp(device: String)
+GET         /checkBackAllFiles                             controllers.SmReport.checkBackAllFiles
+GET         /checkBackFilesLastYear                        controllers.SmReport.checkBackFilesLastYear
+GET         /checkDuplicates/:device                       controllers.SmReport.checkDuplicates(device: String)
+
+#search
+GET         /search-form                                   controllers.SmSearch.queryForm
+GET         /get-files-by-file-name                        controllers.SmSearch.getFilesbyName(draw: Int, start:Int, length:Int)
+
+# Map static resources from the /public folder to the /assets URL path
+GET         /assets/*file                                  controllers.Assets.versioned(path="/public", file: Asset)

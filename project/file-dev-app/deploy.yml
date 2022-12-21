@@ -1,0 +1,111 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: file-dev-app
+  namespace: otus-msa-project
+  labels:
+    app: file-dev-app
+    # release: app-exporter-file-dev
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: file-dev-app
+  template:
+    metadata:
+      labels:
+        app: file-dev-app
+    spec:
+      restartPolicy: Always
+      containers:
+        - name: file-dev-app
+          image: michaelns/file-dev-app:v1
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: "JAVA_OPTS"
+              value: "-Dhttp.port=9000 -Dplay.evolutions.db.default.autoApply=true -Dconfig.file=/svc/conf/application-cluster.conf"
+            - name: APPLICATION_SECRET
+              value: "QCY?tAnfk?aZ?iwrNwnxIlR6CTf:G3gf:90Latabg@5241AB`R5W:1uDFN];Ik@n"
+            - name: ROOT_DOMAIN
+              value: "arch.homework"
+            - name: INGRESS_DOMAIN
+              value: "auth-app.otus-msa-project.svc.cluster.local"
+            - name: DATABASE_URL
+              value: "jdbc:postgresql://file-dev-db-postgresql:5432/file-dev-db"
+            - name: POSTGRES_USER
+              value: "filedevuser"
+            - name: POSTGRES_PASSWORD
+              value: "filedevpasswd"
+          ports:
+            - containerPort: 9000
+              name: http
+            - containerPort: 9095
+              name: prometheus
+            # - containerPort: 9443
+            #   name: https
+          command:
+            - "/svc/bin/start"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: file-dev-app
+spec:
+  type: ClusterIP
+  selector:
+    app: file-dev-app
+  ports:
+    - port: 80
+      name: http  # Istio требует явного указания протокола при определенных настройках
+      targetPort: http
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: file-dev-app-srv
+  labels:
+    release: app-exporter-file-dev
+spec:
+  type: ClusterIP
+  selector:
+    app: file-dev-app
+    # release: prom
+  ports:
+    - name: prometheus
+      port: 9095
+      targetPort: 9095
+    # - name: http
+    #   protocol: TCP
+    #   port: 80
+    #   targetPort: 9095
+    # - name: metrics
+    #   protocol: TCP
+    #   port: 9095
+    #   targetPort: 9095
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: file-dev-app-sm
+  namespace: otus-msa-project
+  labels:
+    app: file-dev-app
+    # release: app-exporter-file-dev
+spec:
+  endpoints:
+    - interval: 10s
+      port: prometheus
+      path: /metrics
+      targetPort: 9095
+  jobLabel: file-dev-app-sm
+  # jobLabel: app-exporter-file-dev-prometheus-app-exporter
+  namespaceSelector:
+    matchNames:
+    - otus-msa-project
+  selector:
+    matchLabels:
+      app: file-dev-app
+      release: app-exporter-file-dev

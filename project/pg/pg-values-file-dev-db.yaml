@@ -1,0 +1,43 @@
+global:
+  postgresql:
+    auth:
+      postgresPassword: "postgres"
+
+auth:
+  username: "filedevuser"
+  password: "filedevpasswd"
+  database: "file-dev-db"
+
+primary:
+  initdb:
+    user: "filedevuser"
+    scripts:
+        test.sh: |
+            #!/bin/sh
+            echo "Hello world!"
+    user: "postgres"
+    scripts:
+        init-script.sql: |
+          create extension pg_stat_statements;
+  persistence:
+    enabled: true
+    size: 300m
+
+  resources:
+    requests:
+      memory: 256Mi
+      cpu: 250m
+
+  service:
+    type: NodePort
+    # nodePorts.postgresql: 32555
+
+postgresqlSharedPreloadLibraries: pgaudit,pg_stat_statements
+
+networkPolicy:
+  enabled: "true"
+
+  metrics:
+    enabled: "false"
+    serviceMonitor:
+      enabled: "false"

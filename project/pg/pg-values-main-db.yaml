@@ -1,0 +1,37 @@
+global:
+  postgresql:
+    auth:
+      postgresPassword: "postgres"
+
+auth:
+  username: "play_sm_user"
+  password: "play_sm_pass"
+  database: "play-sm-db"
+
+primary:
+  initdb:
+    user: "play_sm_user"
+    scripts:
+        test.sh: |
+            #!/bin/sh
+            echo "Hello world!"
+  persistence:
+    enabled: true
+    size: 300m
+
+  resources:
+    requests:
+      memory: 256Mi
+      cpu: 250m
+
+  # service:
+  #   type: NodePort
+  #   port: 5432
+
+networkPolicy:
+  enabled: "true"
+
+  metrics:
+    enabled: false
+    serviceMonitor:
+      enabled: false

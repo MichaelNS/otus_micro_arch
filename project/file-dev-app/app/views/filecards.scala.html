@@ -1,0 +1,29 @@
+@(cnt: Option[Int], maxRows: Option[Int], fileCardSeq: Seq[(String, String, java.time.LocalDateTime)])()
+@_template {
+    <div class="row column">
+        <h2>NS SmFileCard</h2>
+        @if(cnt.isDefined) {
+            <h3>all rows - @cnt, max config rows - @maxRows</h3>
+        }
+    </div>
+    <div class="row column">
+        <table class="stack">
+            <thead>
+                <tr>
+                    <th>Path</th>
+                    <th >Name</th>
+                    <th width="40">LastModifiedDate</th>
+                </tr>
+            </thead>
+            <tbody>
+            @for(fileCard <- fileCardSeq) {
+                <tr>
+                    <td>@fileCard._1</td>
+                    <td>@fileCard._2</td>
+                    <td>@fileCard._3.format(java.time.format.DateTimeFormatter.ofPattern("yyyy.MM.dd HH.mm"))</td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+}

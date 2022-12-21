@@ -1,0 +1,10 @@
+prometheus:
+  prometheusSpec:
+    serviceMonitorSelectorNilUsesHelmValues: false
+    serviceMonitorSelector: {}
+
+    # additionalScrapeConfigs: |
+    #   - job_name: "serviceMonitor/otus-msa-project/app-exporter-file-dev-prometheus-exporter"
+    #     scrape_interval: 5s
+    #     static_configs:
+    #     - targets: ["app-exporter-file-dev-prometheus-exporter:9095"]

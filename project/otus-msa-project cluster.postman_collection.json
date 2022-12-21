@@ -1,0 +1,225 @@
+{
+	"info": {
+		"_postman_id": "64df4fd0-ea11-46c9-ab87-089d4e924aa0",
+		"name": "otus-msa-project cluster",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "18324905"
+	},
+	"item": [
+		{
+			"name": "register",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Check result\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.id).to.eql(2);",
+							"    //pm.expect(jsonData.id).not.to.be.null;",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Host",
+						"value": "{{ingressHost}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"login\": \"vaspup\",\n    \"password\": \"123\",\n    \"email\": \"vas@pup.com\",\n    \"first_name\": \"vasili\",\n    \"last_name\": \"vasin\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{baseUrl}}/auth/register",
+					"protocol": "http",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"auth",
+						"register"
+					]
+				},
+				"description": "проверка, что изменение и получение профиля пользователя недоступно без логина"
+			},
+			"response": []
+		},
+		{
+			"name": "login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// var xsrfCookie = postman.getResponseCookie(\"XSRF-TOKEN\"); postman.setEnvironmentVariable('xsrf-token', xsrfCookie.value);",
+							"// pm.environment.set(\"xsrf-token\", decodeURIComponent(pm.cookies.get(\"XSRF-TOKEN\")))",
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Your test name\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.status).to.eql(\"ok\");",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Host",
+						"value": "{{ingressHost}}",
+						"type": "text"
+					},
+					{
+						"key": "X-XSRF-TOKEN",
+						"value": "{{xsrf-token}}",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "username",
+							"value": "vaspup",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "123",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://{{baseUrl}}/auth/login",
+					"protocol": "http",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"auth",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "importDevice",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"WD\",\n    \"label\": \"my-data\",\n    \"uuid\": \"12345\"\n}\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{baseUrl}}/file-dev/create",
+					"protocol": "http",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"file-dev",
+						"create"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "importFiles",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"deviceUid\": \"12345\",\n    \"impPath\": \"Категория/Медиа/mp3/01_rock/Cranberries/01_Everybody_Else_Is_Doing_It_So_1993/\",\n    \"hSmBoFileCard\": [\n        {\n            \"id\": \"6D8C1C5E17329F96F1C2E590B4697A7A20E7C0D4303F402E5B0761DAA8FBB08F\",\n            \"deviceUid\": \"12345\",\n            \"fParent\": \"Категория/Медиа/mp3/01_rock/Cranberries/01_Everybody_Else_Is_Doing_It_So_1993/\",\n            \"fName\": \"Текстовый документ.txt\",\n            \"fExtension\": \"txt\",\n            \"fCreationDate\": \"2002-01-01T00:01:02\",\n            \"fLastModifiedDate\": \"2002-01-01T00:01:02\",\n            \"fSize\": 50,\n            \"fMimeTypeJava\": \"text/plain\",\n            \"fNameLc\": \"текстовый документ.txt\"\n        },\n        {\n            \"id\": \"4F2DFFF9B99D957125FAB7E499B8DD13526B598489B9568A3AE477204799C7A4\",\n            \"deviceUid\": \"12345\",\n            \"fParent\": \"Категория/Медиа/mp3/01_rock/Cranberries/01_Everybody_Else_Is_Doing_It_So_1993/\",\n            \"fName\": \"13_Reason.mp3\",\n            \"fExtension\": \"mp3\",\n            \"fCreationDate\": \"2002-01-01T00:01:02\",\n            \"fLastModifiedDate\": \"2002-01-01T00:01:02\",\n            \"fSize\": 2931860,\n            \"fMimeTypeJava\": \"audio/mpeg\",\n            \"fNameLc\": \"13_reason.mp3\"\n        },\n        {\n            \"id\": \"AD16A0B36F87D8D04A3C51D78F39E07C47C328303316556AD2C39854D036DD15\",\n            \"deviceUid\": \"12345\",\n            \"fParent\": \"Категория/Медиа/mp3/01_rock/Cranberries/01_Everybody_Else_Is_Doing_It_So_1993/\",\n            \"fName\": \"18_How_Radical_Mix.mp3\",\n            \"fExtension\": \"mp3\",\n            \"fCreationDate\": \"2002-01-01T00:01:02\",\n            \"fLastModifiedDate\": \"2002-01-01T00:01:02\",\n            \"fSize\": 4218966,\n            \"fMimeTypeJava\": \"audio/mpeg\",\n            \"fNameLc\": \"18_how_radical_mix.mp3\"\n        },\n        {\n            \"id\": \"95281BAD5CA1A6E37525DF5C65ED74D67CD771F86DFD231E4F4B4383AB2C8CAE\",\n            \"deviceUid\": \"12345\",\n            \"fParent\": \"Категория/Медиа/mp3/01_rock/Cranberries/01_Everybody_Else_Is_Doing_It_So_1993/\",\n            \"fName\": \"11_How.mp3\",\n            \"fExtension\": \"mp3\",\n            \"fCreationDate\": \"2002-01-01T00:01:02\",\n            \"fLastModifiedDate\": \"2002-01-01T00:01:02\",\n            \"fSize\": 4107998,\n            \"fMimeTypeJava\": \"audio/mpeg\",\n            \"fNameLc\": \"11_how.mp3\"\n        },\n        {\n            \"id\": \"E92AA404ABDB963F2DAA1D3614509021C83EE42A142285180F30A37D4ECBF222\",\n            \"deviceUid\": \"12345\",\n            \"fParent\": \"Категория/Медиа/mp3/01_rock/Cranberries/01_Everybody_Else_Is_Doing_It_So_1993/\",\n            \"fName\": \"09_Still_Can_t.mp3\",\n            \"fExtension\": \"mp3\",\n            \"fCreationDate\": \"2002-01-01T00:01:02\",\n            \"fLastModifiedDate\": \"2002-01-01T00:01:02\",\n            \"fSize\": 5203887,\n            \"fMimeTypeJava\": \"audio/mpeg\",\n            \"fNameLc\": \"09_still_can_t.mp3\"\n        },\n        {\n            \"id\": \"AE1ADB403809A3E7DEF3576BE54BA77DC695EDD3457140007E5E646A6746622D\",\n            \"deviceUid\": \"12345\",\n            \"fParent\": \"Категория/Медиа/mp3/01_rock/Cranberries/01_Everybody_Else_Is_Doing_It_So_1993/\",\n            \"fName\": \"02_Dreams.mp3\",\n            \"fExtension\": \"mp3\",\n            \"fCreationDate\": \"2002-01-01T00:01:02\",\n            \"fLastModifiedDate\": \"2002-01-01T00:01:02\",\n            \"fSize\": 6485349,\n            \"fMimeTypeJava\": \"audio/mpeg\",\n            \"fNameLc\": \"02_dreams.mp3\"\n        },\n        {\n            \"id\": \"48E733EF817156066081A843F0B10D7A9C8D29B4DC7AD2694CA1FAD779899874\",\n            \"deviceUid\": \"12345\",\n            \"fParent\": \"Категория/Медиа/mp3/01_rock/Cranberries/01_Everybody_Else_Is_Doing_It_So_1993/\",\n            \"fName\": \"10_I_Will_Always.mp3\",\n            \"fExtension\": \"mp3\",\n            \"fCreationDate\": \"2002-01-01T00:01:02\",\n            \"fLastModifiedDate\": \"2002-01-01T00:01:02\",\n            \"fSize\": 3840295,\n            \"fMimeTypeJava\": \"audio/mpeg\",\n            \"fNameLc\": \"10_i_will_always.mp3\"\n        },\n        {\n            \"id\": \"EE898066361959C1946FF579AF2890B553CE37C84D419D80D11B3C94BA8FDEB7\",\n            \"deviceUid\": \"12345\",\n            \"fParent\": \"Категория/Медиа/mp3/01_rock/Cranberries/01_Everybody_Else_Is_Doing_It_So_1993/\",\n            \"fName\": \"12_Put_Me_Down.mp3\",\n            \"fExtension\": \"mp3\",\n            \"fCreationDate\": \"2002-01-01T00:01:02\",\n            \"fLastModifiedDate\": \"2002-01-01T00:01:02\",\n            \"fSize\": 5059691,\n            \"fMimeTypeJava\": \"audio/mpeg\",\n            \"fNameLc\": \"12_put_me_down.mp3\"\n        },\n        {\n            \"id\": \"3A9605C13088075E287821F1AD1AC3D5ADF992DA6ED7B0B6B7F00B38F19CA732\",\n            \"deviceUid\": \"12345\",\n            \"fParent\": \"Категория/Медиа/mp3/01_rock/Cranberries/01_Everybody_Else_Is_Doing_It_So_1993/\",\n            \"fName\": \"07_Linger.mp3\",\n            \"fExtension\": \"mp3\",\n            \"fCreationDate\": \"2002-01-01T00:01:02\",\n            \"fLastModifiedDate\": \"2002-01-01T00:01:02\",\n            \"fSize\": 6516696,\n            \"fMimeTypeJava\": \"audio/mpeg\",\n            \"fNameLc\": \"07_linger.mp3\"\n        },\n        {\n            \"id\": \"F4A36B057A8ED3F4AE49A6CF922D1FAAA44056CCFED9A84E23B34C6B04AA7810\",\n            \"deviceUid\": \"12345\",\n            \"fParent\": \"Категория/Медиа/mp3/01_rock/Cranberries/01_Everybody_Else_Is_Doing_It_So_1993/\",\n            \"fName\": \"03_Sunday.mp3\",\n            \"fExtension\": \"mp3\",\n            \"fCreationDate\": \"2002-01-01T00:01:02\",\n            \"fLastModifiedDate\": \"2002-01-01T00:01:02\",\n            \"fSize\": 5062198,\n            \"fMimeTypeJava\": \"audio/mpeg\",\n            \"fNameLc\": \"03_sunday.mp3\"\n        },\n        {\n            \"id\": \"EBE0A357E34F4BFC67CBBDFD41530946DE3858163B1BD081CC3B6F05AF766019\",\n            \"deviceUid\": \"12345\",\n            \"fParent\": \"Категория/Медиа/mp3/01_rock/Cranberries/01_Everybody_Else_Is_Doing_It_So_1993/\",\n            \"fName\": \"15_What_You_Were.mp3\",\n            \"fExtension\": \"mp3\",\n            \"fCreationDate\": \"2002-01-01T00:01:02\",\n            \"fLastModifiedDate\": \"2002-01-01T00:01:02\",\n            \"fSize\": 5247772,\n            \"fMimeTypeJava\": \"audio/mpeg\",\n            \"fNameLc\": \"15_what_you_were.mp3\"\n        },\n        {\n            \"id\": \"E574D5B8C4C04BB85B7393561217C03BF2E1ADC92FB32DFF9ACA2F4553F83C6D\",\n            \"deviceUid\": \"12345\",\n            \"fParent\": \"Категория/Медиа/mp3/01_rock/Cranberries/01_Everybody_Else_Is_Doing_It_So_1993/\",\n            \"fName\": \"14_Them.mp3\",\n            \"fExtension\": \"mp3\",\n            \"fCreationDate\": \"2002-01-01T00:01:02\",\n            \"fLastModifiedDate\": \"2002-01-01T00:01:02\",\n            \"fSize\": 5275358,\n            \"fMimeTypeJava\": \"audio/mpeg\",\n            \"fNameLc\": \"14_them.mp3\"\n        },\n        {\n            \"id\": \"0CD271577693766B19128F441667E9918435B6902E1EA46FE2FB17DF2EB5FC7D\",\n            \"deviceUid\": \"12345\",\n            \"fParent\": \"Категория/Медиа/mp3/01_rock/Cranberries/01_Everybody_Else_Is_Doing_It_So_1993/\",\n            \"fName\": \"04_Pretty.mp3\",\n            \"fExtension\": \"mp3\",\n            \"fCreationDate\": \"2002-01-01T00:01:02\",\n            \"fLastModifiedDate\": \"2002-01-01T00:01:02\",\n            \"fSize\": 3257869,\n            \"fMimeTypeJava\": \"audio/mpeg\",\n            \"fNameLc\": \"04_pretty.mp3\"\n        },\n        {\n            \"id\": \"5DBF1EFE468C0A2505634C5DD4B8F8984007480A69D073157370C2A0DE999902\",\n            \"deviceUid\": \"12345\",\n            \"fParent\": \"Категория/Медиа/mp3/01_rock/Cranberries/01_Everybody_Else_Is_Doing_It_So_1993/\",\n            \"fName\": \"16_Liar.mp3\",\n            \"fExtension\": \"mp3\",\n            \"fCreationDate\": \"2002-01-01T00:01:02\",\n            \"fLastModifiedDate\": \"2002-01-01T00:01:02\",\n            \"fSize\": 3381376,\n            \"fMimeTypeJava\": \"audio/mpeg\",\n            \"fNameLc\": \"16_liar.mp3\"\n        },\n        {\n            \"id\": \"B87CAB77CDB7764F69AB13CD90FBB63F0403A9954398E97A3E9F5A23E0B214E5\",\n            \"deviceUid\": \"12345\",\n            \"fParent\": \"Категория/Медиа/mp3/01_rock/Cranberries/01_Everybody_Else_Is_Doing_It_So_1993/\",\n            \"fName\": \"01_I_Still_Do.mp3\",\n            \"fExtension\": \"mp3\",\n            \"fCreationDate\": \"2002-01-01T00:01:02\",\n            \"fLastModifiedDate\": \"2002-01-01T00:01:02\",\n            \"fSize\": 4729921,\n            \"fMimeTypeJava\": \"audio/mpeg\",\n            \"fNameLc\": \"01_i_still_do.mp3\"\n        },\n        {\n            \"id\": \"AFDDB35D2B267CC4182F7CBE76E365E65198CE48D553AE62FED7046AA14FA493\",\n            \"deviceUid\": \"12345\",\n            \"fParent\": \"Категория/Медиа/mp3/01_rock/Cranberries/01_Everybody_Else_Is_Doing_It_So_1993/\",\n            \"fName\": \"17_Pretty_Pret_A_Porter_Movie_Remix.mp3\",\n            \"fExtension\": \"mp3\",\n            \"fCreationDate\": \"2002-01-01T00:01:02\",\n            \"fLastModifiedDate\": \"2002-01-01T00:01:02\",\n            \"fSize\": 5234607,\n            \"fMimeTypeJava\": \"audio/mpeg\",\n            \"fNameLc\": \"17_pretty_pret_a_porter_movie_remix.mp3\"\n        },\n        {\n            \"id\": \"A44F7C281D96AA5E5007DBC8C494208B3F5EE2CAC9DED7972A3F76783972D7AE\",\n            \"deviceUid\": \"12345\",\n            \"fParent\": \"Категория/Медиа/mp3/01_rock/Cranberries/01_Everybody_Else_Is_Doing_It_So_1993/\",\n            \"fName\": \"08_Wanted.mp3\",\n            \"fExtension\": \"mp3\",\n            \"fCreationDate\": \"2002-01-01T00:01:02\",\n            \"fLastModifiedDate\": \"2002-01-01T00:01:02\",\n            \"fSize\": 3050979,\n            \"fMimeTypeJava\": \"audio/mpeg\",\n            \"fNameLc\": \"08_wanted.mp3\"\n        },\n        {\n            \"id\": \"584A3018E6ABF8D0D94DB6A83FCC67B13416DBBBF8A8B6E60AA85305998AA092\",\n            \"deviceUid\": \"12345\",\n            \"fParent\": \"Категория/Медиа/mp3/01_rock/Cranberries/01_Everybody_Else_Is_Doing_It_So_1993/\",\n            \"fName\": \"05_Waltzing_Back.mp3\",\n            \"fExtension\": \"mp3\",\n            \"fCreationDate\": \"2002-01-01T00:01:02\",\n            \"fLastModifiedDate\": \"2002-01-01T00:01:02\",\n            \"fSize\": 5225202,\n            \"fMimeTypeJava\": \"audio/mpeg\",\n            \"fNameLc\": \"05_waltzing_back.mp3\"\n        },\n        {\n            \"id\": \"10D74AC26E514944C493ADBF81EF092C9E605BD6EF1B2689469B9BC2F2006116\",\n            \"deviceUid\": \"12345\",\n            \"fParent\": \"Категория/Медиа/mp3/01_rock/Cranberries/01_Everybody_Else_Is_Doing_It_So_1993/\",\n            \"fName\": \"06_Not_Sorry.mp3\",\n            \"fExtension\": \"mp3\",\n            \"fCreationDate\": \"2002-01-01T00:01:02\",\n            \"fLastModifiedDate\": \"2002-01-01T00:01:02\",\n            \"fSize\": 6155580,\n            \"fMimeTypeJava\": \"audio/mpeg\",\n            \"fNameLc\": \"06_not_sorry.mp3\"\n        }\n    ]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{baseUrl}}/file-dev/createFc",
+					"protocol": "http",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"file-dev",
+						"createFc"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "arch.homework",
+			"type": "string"
+		}
+	]
+}

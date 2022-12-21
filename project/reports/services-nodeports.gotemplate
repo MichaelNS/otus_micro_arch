@@ -1,0 +1,9 @@
+{{- range .items -}}
+    {{ $name := .metadata.name }}
+    {{ $clusterIP := .spec.clusterIP }}
+
+    {{- range .spec.ports -}}
+        {{$name}}             {{$clusterIP}}{{":"}}{{ .nodePort }}
+    {{- end -}}
+{{- end -}}
+{{"\n"}}

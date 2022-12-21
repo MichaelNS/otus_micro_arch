@@ -1,0 +1,76 @@
+@import helper._
+@(devices: scala.collection.mutable.Seq[DeviceView])(implicit request: MessagesRequestHeader)
+@_template {
+    <div class="row column">
+        <h2>Device import</h2>
+    </div>
+
+    @form(routes.SmSyncDeviceStream.importDevice) {
+        @CSRF.formField
+
+        <button class="button success">import devices</button>
+    }
+
+    <div class="row column">
+        <table class="stack">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Label</th>
+                    <th>Uid</th>
+                    <th>Descr</th>
+                    <th>last sync</th>
+                    <th>visible</th>
+                    <th>reliable</th>
+                    <th>syncDevice</th>
+                    <th>calcCRC</th>
+                    <th>calcExif</th>
+                </tr>
+            </thead>
+            <tbody>
+            @for(device <- devices) {
+                <tr>
+                    <td>@device.name</td>
+                    <td>@device.label</td>
+                    <td><a href="@routes.SmApplication.deviceIndex(device.uid)" >@device.uid</a></td>
+                    <td>@device.description</td>
+                    <td>@device.syncDateDiff</td>
+                    <td>@device.visible</td>
+                    <td>@device.reliable</td>
+
+                    <td>
+                        <div class="input-group-button">
+                            <form action="@routes.SmSyncDeviceStream.syncDevice(device.uid)" method="post">
+                                <button class="button success">sync Device</button>
+                            </form>
+                        </div>
+                    </td>
+
+                    <td>
+                        <div class="input-group-button">
+                            <form action="@routes.SmFcCrc.calcCRC(device.uid)" method="post">
+                                <button class="button primary">calcCRC</button>
+                            </form>
+                        </div>
+                    </td>
+
+                    <td>
+                        <div class="input-group-button">
+                            <form action="@routes.SmSyncExif.calcExif(device.uid)" method="post">
+                                <button class="button primary">calcExif</button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+
+    @form(routes.SmFcCrc.calcAllCRC) {
+        @CSRF.formField
+
+        <button class="button success">calcAllCRC</button>
+    }
+
+}
