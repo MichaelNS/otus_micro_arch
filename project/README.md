@@ -68,3 +68,4 @@ kubectl get svc --selector app.kubernetes.io/name=postgresql -o go-template-file
 ```
 
 
+# Ссылки

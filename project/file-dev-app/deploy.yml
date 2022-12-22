@@ -67,24 +67,17 @@ kind: Service
 metadata:
   name: file-dev-app-srv
   labels:
+    app: file-dev-app
     release: app-exporter-file-dev
 spec:
   type: ClusterIP
   selector:
     app: file-dev-app
-    # release: prom
+    # release: app-exporter-file-dev
   ports:
     - name: prometheus
       port: 9095
-      targetPort: 9095
-    # - name: http
-    #   protocol: TCP
-    #   port: 80
-    #   targetPort: 9095
-    # - name: metrics
-    #   protocol: TCP
-    #   port: 9095
-    #   targetPort: 9095
+      # targetPort: 9095
 ---
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
@@ -93,13 +86,14 @@ metadata:
   namespace: otus-msa-project
   labels:
     app: file-dev-app
-    # release: app-exporter-file-dev
+    release: app-exporter-file-dev
 spec:
   endpoints:
     - interval: 10s
       port: prometheus
       path: /metrics
-      targetPort: 9095
+      # targetPort: 9095
+      scheme: http
   jobLabel: file-dev-app-sm
   # jobLabel: app-exporter-file-dev-prometheus-app-exporter
   namespaceSelector:
