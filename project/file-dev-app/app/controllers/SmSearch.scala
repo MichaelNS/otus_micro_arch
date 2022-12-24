@@ -19,8 +19,8 @@ class SmSearch @Inject()(val database: DBService)(implicit assetsFinder: AssetsF
 
   val logger: Logger = play.api.Logger(getClass)
 
-  def queryForm: Action[AnyContent] = Action {
-    Ok(views.html.sm_search_autocomplete(assetsFinder))
+  def queryForm: Action[AnyContent] = Action { request =>
+    Ok(views.html.sm_search_autocomplete(assetsFinder, request))
   }
 
   case class Paging(draw: Int,

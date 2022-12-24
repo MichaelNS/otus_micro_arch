@@ -1,5 +1,5 @@
 @(cnt: Int, maxRows: Long, rows: Seq[(String, String, java.time.LocalDateTime)]
-)()
+)(implicit request: RequestHeader)
 @_template {
     <div class="row column">
         <h2>Check device backup</h2>

@@ -44,6 +44,8 @@ spec:
               name: http
             - containerPort: 9095
               name: prometheus
+            - containerPort: 5266
+              name: kamon
             # - containerPort: 9443
             #   name: https
           command:
@@ -77,6 +79,8 @@ spec:
   ports:
     - name: prometheus
       port: 9095
+    - name: kamon
+      port: 5266
       # targetPort: 9095
 ---
 apiVersion: monitoring.coreos.com/v1

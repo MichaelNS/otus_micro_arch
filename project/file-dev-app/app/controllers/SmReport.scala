@@ -18,7 +18,7 @@ class SmReport @Inject()(cc: MessagesControllerComponents, config: Configuration
   extends MessagesAbstractController(cc)
     with play.api.i18n.I18nSupport {
 
-  def listFilesWithoutSha256ByDevice(device: String): Action[AnyContent] = Action.async {
+  def listFilesWithoutSha256ByDevice(device: String): Action[AnyContent] = Action.async { request =>
     val maxRows = 200
     val baseQry = Tables.SmFileCard
       .filter(fc => fc.deviceUid === device && fc.sha256.isEmpty && fc.fSize > 0L)
@@ -29,7 +29,7 @@ class SmReport @Inject()(cc: MessagesControllerComponents, config: Configuration
                               qry <- baseQry.take(maxRows).result} yield (cnt, qry)
 
     database.runAsync(composedAction).map { rowSeq =>
-      Ok(views.html.filecards(Some(rowSeq._1), Some(maxRows), rowSeq._2)()
+      Ok(views.html.filecards(Some(rowSeq._1), Some(maxRows), rowSeq._2)(request)
       )
     }
   }
@@ -43,7 +43,7 @@ class SmReport @Inject()(cc: MessagesControllerComponents, config: Configuration
    * @param device device
    * @return
    */
-  def checkBackUp(device: String): Action[AnyContent] = Action.async {
+  def checkBackUp(device: String): Action[AnyContent] = Action.async { request =>
     val backUpVolumes = config.get[Seq[String]]("BackUp.volumes")
     val maxRows: Long = config.get[Long]("BackUp.maxResult")
 
@@ -65,11 +65,11 @@ class SmReport @Inject()(cc: MessagesControllerComponents, config: Configuration
                               filtQry <- filtQry.result} yield (cnt, filtQry)
 
     database.runAsync(composedAction).map { rowSeq =>
-      Ok(views.html.sm_chk_device_backup(rowSeq._1, maxRows, rowSeq._2)())
+      Ok(views.html.sm_chk_device_backup(rowSeq._1, maxRows, rowSeq._2)(request))
     }
   }
 
-  def checkBackAllFiles: Action[AnyContent] = Action.async {
+  def checkBackAllFiles: Action[AnyContent] = Action.async { request =>
     val cntFiles: Int = config.get[Int]("BackUp.allFiles.cntFiles")
     val maxRows: Int = config.get[Int]("BackUp.allFiles.maxRows")
     val device_Unreliable: String = config.get[Seq[String]]("BackUp.allFiles.device_Unreliable").toSet.mkString("'", "', '", "'")
@@ -111,12 +111,12 @@ class SmReport @Inject()(cc: MessagesControllerComponents, config: Configuration
       """
       .as[(String, String, String, String, String)]
     database.runAsync(qry).map { rowSeq =>
-      Ok(views.html.sm_chk_all_backup(rowSeq, device_Unreliable, device_NotView, cntFiles, rowSeq.length, maxRows)())
+      Ok(views.html.sm_chk_all_backup(rowSeq, device_Unreliable, device_NotView, cntFiles, rowSeq.length, maxRows)(request))
     }
 
   }
 
-  def checkBackFilesLastYear: Action[AnyContent] = Action.async {
+  def checkBackFilesLastYear: Action[AnyContent] = Action.async { request =>
     val cntFiles: Int = 2
     val maxRows: Int = 200
     // TODO delete
@@ -165,7 +165,7 @@ class SmReport @Inject()(cc: MessagesControllerComponents, config: Configuration
           """
       .as[(String, String, String, String)]
     database.runAsync(qry).map { rowSeq =>
-      Ok(views.html.sm_chk_backup_last_year(rowSeq, device_Unreliable, device_NotView, cntFiles, rowSeq.length, maxRows)())
+      Ok(views.html.sm_chk_backup_last_year(rowSeq, device_Unreliable, device_NotView, cntFiles, rowSeq.length, maxRows)(request))
     }
   }
 
@@ -176,10 +176,10 @@ class SmReport @Inject()(cc: MessagesControllerComponents, config: Configuration
    * @param device device uid
    * @return [[views.html.f_duplicates]]
    */
-  def checkDuplicates(device: String): Action[AnyContent] = Action.async {
+  def checkDuplicates(device: String): Action[AnyContent] = Action.async { request =>
     val res = checkDuplicatesEx(device, fParent = None, fExtension = None)
     res._1.map { rowSeq =>
-      Ok(views.html.f_duplicates(device, res._2, rowSeq)())
+      Ok(views.html.f_duplicates(device, res._2, rowSeq)(request))
     }
   }
 

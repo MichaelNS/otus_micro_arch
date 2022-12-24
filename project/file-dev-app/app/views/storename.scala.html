@@ -1,4 +1,4 @@
-@(fileCardSeq: Seq[(String, Int)])()
+@(fileCardSeq: Seq[(String, Int)])(implicit request: RequestHeader)
 @_template {
     <div class="row column">
         <h2>Store name</h2>
